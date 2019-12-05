@@ -1,0 +1,19 @@
+server:
+  port: 8762 #端口
+spring:
+  application:
+    name: provider-service
+  datasource:
+    username: root  #数据库用户名
+    password: 123456  #数据库密码
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC #连接数据库url
+    driver-class-name: com.mysql.jdbc.Driver
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ #注册中心项目的地址和端口
+
+mybatis:
+  #config-location: classpath:mybatis/mybatis-config.xml   #mybatis配置文件所在路径
+  type-aliases-package: com.xuling.providerdemo.model             #定义所有操作类的别名所在包
+  mapper-locations: classpath:mybatis/*.xml     #所有的mapper映射文件
