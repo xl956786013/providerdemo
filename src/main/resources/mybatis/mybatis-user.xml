@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="User">
+    <sql id="user_columns">
+        id id,
+        user_name userName,
+        real_name realName,
+        password password,
+        sex sex,
+        birthday birthday,
+        phone_num phoneNum,
+        id_card idCard,
+        create_time createTime,
+        update_user_id updateUserId,
+        update_time updateTime,
+        del_flg delFlg
+    </sql>
+    <sql id="queryUserPageWhere">
+        <where>
+            <if test="userName != '' and userName != null">
+                and user_name = #{userName}
+            </if>
+            and del_flg = 0
+        </where>
+    </sql>
+    <select id="getUserById" parameterType="java.lang.Integer" resultType="com.xuling.providerdemo.model.User">
+        SELECT user_name userName,id id FROM t_user WHERE id=#{id}
+    </select>
+    <insert id="saveUser" parameterType="com.xuling.providerdemo.model.dto.UserDto" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user (
+        user_name,
+        <if test="realName != null">
+            real_name,
+        </if>
+        password,
+        <if test="sex != null">
+            sex,
+        </if>
+        <if test="birthdayStr != null and birthdayStr != ''">
+            birthday,
+        </if>
+        <if test="phoneNum != null">
+            phone_num,
+        </if>
+        <if test="idCard != null">
+            id_card,
+        </if>
+        create_time,
+        update_user_id,
+        update_time
+        ) values (
+        #{userName},
+        <if test="realName != null">
+            #{realName},
+        </if>
+        #{password},
+        <if test="sex != null">
+            #{sex},
+        </if>
+        <if test="birthdayStr != null and birthdayStr != ''">
+            #{birthdayStr},
+        </if>
+        <if test="phoneNum != null">
+            #{phoneNum},
+        </if>
+        <if test="idCard != null">
+            #{idCard},
+        </if>
+        now(),
+        1,
+        now()
+        )
+    </insert>
+    <select id="getUserByUserName" parameterType="java.util.HashMap" resultType="com.xuling.providerdemo.model.User">
+        select <include refid="user_columns"/> from t_user where user_name=#{userName}
+        <if test="delFlg != null">
+            and del_flg = #{delFlg}
+        </if>
+    </select>
+
+    <select id="queryUserPageCount" parameterType="com.xuling.providerdemo.model.dto.UserDto" resultType="java.lang.Integer">
+        select count(1) from t_user <include refid="queryUserPageWhere"/>
+    </select>
+
+    <select id="queryUserPage" parameterType="com.xuling.providerdemo.model.dto.UserDto" resultType="com.xuling.providerdemo.model.vo.UserVo">
+        select <include refid="user_columns"/>
+        from t_user
+        <include refid="queryUserPageWhere"/>
+        limit #{start},#{limit}
+    </select>
+
+    <update id="deleteUserByIdList" parameterType="com.xuling.providerdemo.model.dto.UserDto">
+        update t_user
+        set del_flg = 1,
+        update_user_id = #{updateUserId},
+        update_time = now()
+        where id in
+        <foreach collection="userIdList" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

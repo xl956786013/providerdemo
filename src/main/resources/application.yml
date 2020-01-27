@@ -6,7 +6,7 @@ spring:
   datasource:
     username: root  #数据库用户名
     password: 123456  #数据库密码
-    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC #连接数据库url
+    url: jdbc:mysql://localhost:3306/project?useUnicode=true&characterEncoding=utf-8&serverTimezone=UTC #连接数据库url
     driver-class-name: com.mysql.jdbc.Driver
 eureka:
   client:
